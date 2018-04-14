@@ -13,25 +13,17 @@ $flow::retryWait = 30;
 regPackageSuite({
     "zabbix-agent"      => ['zabbix-agent'],
     "zabbix-server"     => {
-        'ubuntu' => ['zabbix-server-mysql', 'zabbix-frontend-php', 'php5-mysql', 'mysql-client'],
-        'centos' => ['zabbix-server-mysql-2.2.7', 'zabbix-web-mysql-2.2.7', 'mariadb'],
+        'ubuntu' => ['zabbix-server-mysql', 'zabbix-frontend-php', 'php5-mysql', 'mysql-client']
     },
     "mysql-server"      => {
-        'ubuntu' => ['mysql-server'],
-        'centos' => ['mariadb-server'],
+        'ubuntu' => ['mysql-server']
     },
     "perl-jsonrpc"      => {
-        'ubuntu' => ['libjson-rpc-perl'],
-        'centos' => ['perl-JSON-RPC'],
+        'ubuntu' => ['libjson-rpc-perl']
     },
     "sendemail"         => ['sendemail'],
     "selinux-util"      => ['policycoreutils-python']
 });
-
-sub centosPrepare {
-  my $rpmRepo = "http://mirror.kaiyuanshe.org/zabbix/zabbix/2.2/rhel/7/x86_64/zabbix-release-2.2-1.el7.noarch.rpm";
-  runCmd("rpm -q --quiet zabbix-release || rpm -i --quiet $rpmRepo && sed -i s/repo\.zabbix\.com/mirror.kaiyuanshe.org\\\\/zabbix/ /etc/yum.repos.d/zabbix.repo");
-}
 
 regFlows({
     agent   => sub {
@@ -61,8 +53,6 @@ EOM
         my $confAzureVM = <<"EOM";
 UserParameter=azure.vm.agent.alive,ps aux |grep -c "[w]aagent -daemon"
 EOM
-
-        $regStep->("Prepare on CentOS", \&centosPrepare) if (getDistro() =~ /centos/);
 
         $regStep->("Install Zabbix Agent package.", sub {
             installPackageSuite("zabbix-agent");
@@ -104,8 +94,6 @@ EOM
         if($dbServerHost=~/(.*):/){
           $dbServerHost = $1;
         }
-
-        $regStep->("Prepare on CentOS", \&centosPrepare) if (getDistro() =~ /centos/);
 
         $regStep->("Install Zabbix Server package.", sub{
             installPackageSuite("zabbix-server");
@@ -221,11 +209,7 @@ EOM
 
         $regStep->("Enable and restart service.", sub{
           restartService('zabbix-server');
-          if(getDistro() =~ /centos/) {
-            enableService('httpd');
-            enableService('zabbix-server');
-            restartService('httpd');
-          } else {
+          if(getDistro() =~ /ubuntu/) {
             restartService('apache2');
           }
         });
