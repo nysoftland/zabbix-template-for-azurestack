@@ -25,7 +25,7 @@
             "smtpPassword": "[steps('email').smtpPasswordUi]",
             "notificationReceiver": "[steps('email').notificationReceiverUi]",
 
-            "artifactsLocation": "https://gallery.windowsazure.cn/artifact/20161101/Nysoftland.zabbix.1.0.6-preview/Artifacts/"
+            "artifactsLocation": "https://qun.blob.core.windows.net/artifacts/Nysoftland.zabbix.1.0.12/"
         },
         "basics": [{
                 "name": "virtualNetworkNameUi",
@@ -42,6 +42,7 @@
                 "name": "subnetNameUi",
                 "type": "Microsoft.Common.TextBox",
                 "label": "VM subnet name",
+                "defaultValue": "default",
                 "toolTip": "The subnet name the monitor VM connects to, also agents will also be installed on those VMs.",
                 "constraints": {
                     "required": true,
@@ -94,7 +95,7 @@
                     {
                         "name": "monitorVmNameUi",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "Name for the monitor VM",
+                        "label": "Name for the monitor VM (Unique)",
                         "toolTip": "Name for the monitor VM. This would become part of the fully qualified domain name for monitor VM, thus it should be globally unique.",
                         "constraints": {
                             "required": true,
@@ -107,6 +108,7 @@
                         "type": "Microsoft.Common.UserNameTextBox",
                         "label": "Monitor VM user name",
                         "toolTip": "Monitor VM user name.",
+                        "defaultValue": "zabbix",
                         "constraints": {
                             "required": true
                         },
@@ -169,6 +171,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Service backend MySQL database name",
                         "toolTip": "Will be automatically created.",
+                        "defaultValue": "zabbix",
                         "constraints": {
                             "required": true,
                             "regex": "^[A-Za-z0-9]{1,64}$",
@@ -180,6 +183,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Monitoring service backend MySQL user name",
                         "toolTip": "Will be automatically created.",
+                        "defaultValue": "zabbix",
                         "constraints": {
                             "required": true,
                             "regex": "^[A-Za-z0-9]{1,64}$",
