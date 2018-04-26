@@ -31,24 +31,6 @@
             "isDefault": false
         },
         {
-            "name": "monitoringAgentByIps",
-            "type": "Custom",
-            "path": "Artifacts\\monitoringAgentByIps.json",
-            "isDefault": false
-        },
-        {
-            "name": "monitoringAgentByVms",
-            "type": "Custom",
-            "path": "Artifacts\\monitoringAgentByVms.json",
-            "isDefault": false
-        },
-        {
-            "name": "monitoringAgentByVnet",
-            "type": "Custom",
-            "path": "Artifacts\\monitoringAgentByVnet.json",
-            "isDefault": false
-        },
-        {
             "name": "monitoringServer",
             "type": "Custom",
             "path": "Artifacts\\monitoringServer.json",
@@ -92,7 +74,7 @@
         "wide": "Icons\\Wide.png"
     },
     "screenshots": [
-        "Screenshots\\1.png"
+        "Screenshots\\2.png"
     ],
     "links": [{
             "displayName": "ms-resource:LinkDisplayName0",
@@ -100,7 +82,11 @@
         },
         {
             "displayName": "ms-resource:LinkDisplayName1",
-            "uri": "https://gallery.windowsazure.cn/artifact/20161101/Nysoftland.zabbix.1.0.7/Artifacts/readme.pdf"
+            "uri": "https://azstgallery.blob.core.chinacloudapi.cn/artifacts/Nysoftland.zabbix.1.0.8/readme.pdf"
+        },
+        {
+            "displayName": "ms-resource:LinkDisplayName2",
+            "uri": "https://www.zabbix.com/license"
         }
     ],
     "categories": [
