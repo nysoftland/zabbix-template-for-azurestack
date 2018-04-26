@@ -26,17 +26,17 @@
             "smtpPassword": "[steps('email').smtpPasswordUi]",
             "notificationReceiver": "[steps('email').notificationReceiverUi]",
 
-            "artifactsLocation": "https://qun.blob.core.windows.net/artifacts/Nysoftland.zabbix.1.0.8/"
+            "artifactsLocation": "https://azstgallery.blob.core.chinacloudapi.cn/artifacts/Nysoftland.zabbix.1.0.8/"
         },
         "basics": [],
         "steps": [{
                 "name": "monitor",
-                "label": "ms-resource:monitorLabel",
+                "label": "Monitor settings",
                 "subLabel": {
-                    "preValidation": "Configure monitor settings",
+                    "preValidation": "Configure Monitoring settings",
                     "postValidation": "Done"
                 },
-                "bladeTitle": "ms-resource:monitorLabel",
+                "bladeTitle": "Monitor settings",
                 "elements": [{
                         "name": "virtualNetworkName",
                         "type": "Microsoft.Network.VirtualNetworkCombo",
@@ -45,8 +45,8 @@
                             "subnets": "Subnets"
                         },
                         "toolTip": {
-                            "virtualNetwork": "Must exists, or deployment will fail",
-                            "subnets": "Must exists, or deployment will fail"
+                            "virtualNetwork": "Existing virtual network of VMs to be monitored. Must exists, or deployment will fail.",
+                            "subnets": "Must exists, or deployment will fail."
                         },
                         "constraints": {
                             "minAddressPrefixSize": "/24"
@@ -58,7 +58,6 @@
                             "subnet": {
                                 "label": "Existing subnet",
                                 "defaultValue": {
-                                    "name": "default",
                                     "addressPrefixSize": "/24"
                                 },
                                 "constraints": {
@@ -73,8 +72,8 @@
                     {
                         "name": "storageAccount",
                         "type": "Microsoft.Storage.StorageAccountSelector",
-                        "label": "Storage account",
-                        "toolTip": "The storage account for storing VM vhd.",
+                        "label": "Zabbix VM disk storage account",
+                        "toolTip": "The storage account for storing vhd of Zabbix Server VM.",
                         "defaultValue": {
                             "type": "Standard_LRS"
                         },
@@ -90,15 +89,16 @@
                     {
                         "name": "vmSizeUi",
                         "type": "Microsoft.Compute.SizeSelector",
-                        "label": "Virtual machine size",
-                        "toolTip": "Size of Azure virtual machine to provision for VM-Series(Default Standard_A4)",
+                        "label": "Zabbix Server VM size",
+                        "toolTip": "Size of virtual machine to provision for VM-Series(Default Standard_A4). This should depend on your monitored-workload scale. Please check Zabbix documentation for sizing recommendations.",
                         "recommendedSizes": [
                             "Standard_A4",
                             "Standard_A6"
                         ],
                         "constraints": {
                             "excludedSizes": [
-                                "Basic_A0"
+                                "Basic_A0",
+                                "Standard_A0"
                             ]
                         },
                         "osPlatform": "Linux"
@@ -106,20 +106,19 @@
                     {
                         "name": "monitorVmNameUi",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "Name for the monitor VM (Unique)",
-                        "toolTip": "Name for the monitor VM. This would become part of the fully qualified domain name for monitor VM, thus it should be globally unique.",
+                        "label": "Zabbix Server VM (unique) Name",
+                        "toolTip": "This would become part of the fully qualified domain name for monitor VM, thus it should be globally unique.",
+                        "defaultValue": "zabbixserver",
                         "constraints": {
                             "required": true,
-                            "regex": "^[A-Za-z0-9]{1,64}$",
-                            "validationMessage": "Only alphanumeric characters are allowed, and the name must be 1-64 characters long."
+                            "regex": "^[a-z][a-z0-9-]{1,61}[a-z0-9]$",
+                            "validationMessage": "Must be part of a fully qualifed domain name: starting with a lowercase letter; ending with a lowercase letter or a number; only lower case letters, numbers, and dash are allowed; must be 1-64 characters long."
                         }
                     },
                     {
                         "name": "monitorVmUsernameUi",
                         "type": "Microsoft.Common.UserNameTextBox",
-                        "label": "Monitor VM user name",
-                        "toolTip": "Monitor VM user name.",
-                        "defaultValue": "zabbix",
+                        "label": "Zabbix Server VM user name",
                         "constraints": {
                             "required": true
                         },
@@ -129,10 +128,9 @@
                         "name": "monitorVmPasswordUi",
                         "type": "Microsoft.Common.PasswordBox",
                         "label": {
-                            "password": "monitor Vm Password",
-                            "confirmPassword": "monitor Vm Password comfirm"
+                            "password": "Zabbix Server VM password",
+                            "confirmPassword": "Confirm password"
                         },
-                        "toolTip": "Monitor VM password.",
                         "constraints": {
                             "required": true
                         }
@@ -143,15 +141,15 @@
                 "name": "mysql",
                 "label": "MySQL settings",
                 "subLabel": {
-                    "preValidation": "Configure MySQL settings",
+                    "preValidation": "Zabbix Server DB settings",
                     "postValidation": "Done"
                 },
                 "bladeTitle": "MySQL settings",
                 "elements": [{
                         "name": "mysqlHostUi",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "Monitoring service backend MySQL host",
-                        "toolTip": "Monitoring service backend MySQL host",
+                        "label": "Zabbix MySQL host",
+                        "toolTip": "Monitoring service backend MySQL host in the format of 'HOST[:Port]'. Default port is 3306.",
                         "defaultValue": "Localhost",
                         "constraints": {
                             "required": true,
@@ -162,8 +160,8 @@
                     {
                         "name": "mysqlServerTypeUi",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "MySQL Server type",
-                        "toolTip": "MySQL Server type. 'Localhost' for creating a new MySQL instance on the monitor VM, 'existing' for using an existing host.",
+                        "label": "Zabbix MySQL Server type",
+                        "toolTip": "'Localhost' for creating a new MySQL instance on the Zabbix Server VM; 'existing' for using an existing host.",
                         "defaultValue": "Localhost",
                         "constraints": {
                             "allowedValues": [{
@@ -180,7 +178,7 @@
                     {
                         "name": "mysqlDbNameUi",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "Service backend MySQL database name",
+                        "label": "Zabbix MySQL database name",
                         "toolTip": "Will be automatically created.",
                         "defaultValue": "zabbix",
                         "constraints": {
@@ -192,7 +190,7 @@
                     {
                         "name": "mysqlUserUi",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "Monitoring service backend MySQL user name",
+                        "label": "Zabbix MySQL user name",
                         "toolTip": "Will be automatically created.",
                         "defaultValue": "zabbix",
                         "constraints": {
@@ -205,10 +203,9 @@
                         "name": "mysqlPasswordUi",
                         "type": "Microsoft.Common.PasswordBox",
                         "label": {
-                            "password": "MySQL service backend password",
-                            "confirmPassword": "MySQL service backend password confirm"
+                            "password": "Zabbix MySQL password",
+                            "confirmPassword": "Confirm password"
                         },
-                        "toolTip": "Monitoring service backend MySQL password.",
                         "constraints": {
                             "required": true,
                             "regex": "",
@@ -222,15 +219,15 @@
                 "name": "email",
                 "label": "Email settings",
                 "subLabel": {
-                    "preValidation": "Configure Email settings",
+                    "preValidation": "Email notification settings",
                     "postValidation": "Done"
                 },
                 "bladeTitle": "Email settings",
                 "elements": [{
                         "name": "smtpServerUi",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "The smtp server and port",
-                        "toolTip": "The smtp server for mail notification, format is server:port. default port is 25.",
+                        "label": "SMTP server and port",
+                        "toolTip": "The SMTP server for mail notification in the format of 'server[:port]'. Default port is 25.",
                         "constraints": {
                             "regex": "",
                             "validationMessage": ""
@@ -239,8 +236,8 @@
                     {
                         "name": "smtpUserUi",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "The smtp user",
-                        "toolTip": "The smtp user for mail notification.",
+                        "label": "SMTP user",
+                        "toolTip": "The SMTP user for mail notification.",
                         "constraints": {
                             "regex": "^[A-Za-z0-9]{1,64}$",
                             "validationMessage": "Only alphanumeric characters are allowed, and the name must be 1-64 characters long."
@@ -250,10 +247,10 @@
                         "name": "smtpPasswordUi",
                         "type": "Microsoft.Common.PasswordBox",
                         "label": {
-                            "password": "The smtp password",
-                            "confirmPassword": "The smtp password confirm"
+                            "password": "SMTP password",
+                            "confirmPassword": "Confirm password"
                         },
-                        "toolTip": "The smtp password for mail notification.",
+                        "toolTip": "The SMTP password for mail notification.",
                         "constraints": {
                             "regex": "",
                             "validationMessage": ""
