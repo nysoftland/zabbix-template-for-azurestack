@@ -8,6 +8,12 @@
                 "description": "The existing vnet name the existing VMs connects to."
             }
         },
+        "vnetResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "The existing vnet resource group."
+            }
+        },
         "subnetName": {
             "type": "string",
             "metadata": {
@@ -29,7 +35,7 @@
         }
     },
     "variables": {
-        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
+        "vnetID": "[resourceId(parameters('vnetResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
         "subnetRef": "[concat(variables('vnetID'),'/subnets/',parameters('subnetName'))]"
     },
     "resources": [{
@@ -44,7 +50,7 @@
             },
             "parameters": {
                 "ipConfigurations": {
-                    "value": "[reference(concat('Microsoft.Network/virtualnetworks/', parameters('virtualNetworkName'), '/subnets/', parameters('subnetName')), '2015-06-15').ipConfigurations]"
+                    "value": "[reference(variables('subnetRef'), '2015-06-15').ipConfigurations]"
                 },
                 "serverIp": {
                     "value": "[parameters('serverIp')]"
