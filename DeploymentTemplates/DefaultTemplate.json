@@ -249,38 +249,6 @@
                     }
                 }
             }
-        },
-        {
-            "apiVersion": "2015-01-01",
-            "name": "configMonitoringAgentByVnet",
-            "type": "Microsoft.Resources/deployments",
-            "dependsOn": [
-                "configMonitoringServerVM"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('artifactsLocation'), 'monitoringAgentByVnet.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "virtualNetworkName": {
-                        "value": "[parameters('virtualNetworkName')]"
-                    },
-                    "vnetResourceGroup": {
-                        "value": "[parameters('vnetResourceGroup')]"
-                    },
-                    "subnetName": {
-                        "value": "[parameters('subnetName')]"
-                    },
-                    "serverIp": {
-                        "value": "[reference('configMonitoringServerVM').outputs.serverInternalIp.value]"
-                    },
-                    "_artifactsLocation": {
-                        "value": "[parameters('artifactsLocation')]"
-                    }
-                }
-            }
         }
     ],
     "outputs": {
