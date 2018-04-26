@@ -17,6 +17,12 @@
                 "description": "The existing vnet name the monitor VM connects to."
             }
         },
+        "vnetResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "The existing vnet resource group."
+            }
+        },
         "subnetName": {
             "type": "string",
             "metadata": {
@@ -126,8 +132,6 @@
     },
     "variables": {
         "storageAccountType": "[parameters('storageAccountType')]",
-        "addressPrefix": "10.0.0.0/16",
-        "subnetSLBPrefix": "10.0.1.0/24",
         "location": "[resourceGroup().location]",
         "imageReference": "[parameters('vmImageReference')]",
         "OSDiskName": "[concat(parameters('vmName'),'disk')]",
@@ -138,7 +142,7 @@
         "vmStorageAccountContainerName": "vhds",
         "vmName": "[parameters('vmName')]",
         "vmSize": "[parameters('vmSize')]",
-        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
+        "vnetID": "[resourceId(parameters('vnetResourceGroup'),'Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
         "subnetRef": "[concat(variables('vnetID'),'/subnets/',parameters('subnetName'))]",
         "singleQuote": "'"
     },
@@ -149,25 +153,6 @@
             "location": "[variables('location')]",
             "properties": {
                 "accountType": "[variables('storageAccountType')]"
-            }
-        },
-        {
-            "apiVersion": "2015-06-15",
-            "type": "Microsoft.Network/virtualNetworks",
-            "name": "[parameters('virtualNetworkName')]",
-            "location": "[variables('location')]",
-            "properties": {
-                "addressSpace": {
-                    "addressPrefixes": [
-                        "[variables('addressPrefix')]"
-                    ]
-                },
-                "subnets": [{
-                    "name": "[parameters('subnetName')]",
-                    "properties": {
-                        "addressPrefix": "[variables('subnetSLBPrefix')]"
-                    }
-                }]
             }
         },
         {
@@ -188,7 +173,6 @@
             "name": "[variables('nicName')]",
             "location": "[variables('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
                 "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
             ],
             "properties": {

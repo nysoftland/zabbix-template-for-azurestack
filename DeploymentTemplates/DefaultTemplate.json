@@ -24,6 +24,12 @@
             },
             "defaultValue": "default"
         },
+        "vnetResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "The existing vnet resource group."
+            }
+        },
         "monitorVmName": {
             "type": "string",
             "metadata": {
@@ -193,6 +199,9 @@
                     "virtualNetworkName": {
                         "value": "[parameters('virtualNetworkName')]"
                     },
+                    "vnetResourceGroup": {
+                        "value": "[parameters('vnetResourceGroup')]"
+                    },
                     "subnetName": {
                         "value": "[parameters('subnetName')]"
                     },
@@ -257,6 +266,9 @@
                 "parameters": {
                     "virtualNetworkName": {
                         "value": "[parameters('virtualNetworkName')]"
+                    },
+                    "vnetResourceGroup": {
+                        "value": "[parameters('vnetResourceGroup')]"
                     },
                     "subnetName": {
                         "value": "[parameters('subnetName')]"
