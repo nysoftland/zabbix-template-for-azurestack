@@ -2,7 +2,7 @@
     "$schema": "https://gallery.azure.com/schemas/2015-04-01/manifest.json#",
     "name": "zabbix",
     "publisher": "Nysoftland",
-    "version": "1.0.12",
+    "version": "1.0.8",
     "displayName": "ms-resource:displayName",
     "publisherDisplayName": "ms-resource:publisherDisplayName",
     "publisherLegalName": "ms-resource:publisherLegalName",
@@ -64,12 +64,6 @@
             "name": "monitoringServerDbLocalhost",
             "type": "Custom",
             "path": "Artifacts\\monitoringServerDbLocalhost.json",
-            "isDefault": false
-        },
-        {
-            "name": "monitoringServerDbPaas",
-            "type": "Custom",
-            "path": "Artifacts\\monitoringServerDbPaas.json",
             "isDefault": false
         },
         {
